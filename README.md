@@ -14,14 +14,14 @@ dynamic dns needs.
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
-        * [Implemented](#implemented)
-        * [Missing](#missing)
+  * [Implemented](#implemented)
+  * [Missing](#missing)
 * [Installation](#installation)
-        * [Manual](#manual)
-        * [From source](#from-source)
+  * [Manual](#manual)
+  * [From source](#from-source)
 * [Usage](#usage)
-        * [Prequisites](#prequisites)
-        * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
+  * [Prequisites](#prequisites)
+  * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
