@@ -16,6 +16,8 @@ const (
 
 var (
     ErrNoApiSessionid = errors.New("netcup: There is no ApiSessionId. Are you logged in?")
+
+    verbose = false
 )
 
 type Client struct {
@@ -25,7 +27,6 @@ type Client struct {
     ApiPassword string
     ApiSessionid string
 }
-
 
 func NewClient(customernumber int, apikey, apipassword string) *Client {
     return &Client{
@@ -63,7 +64,7 @@ func (c *Client) do(req *Request) (*Response, error) {
         return nil, errors.New(response.getFormattedError())
     }
 
-    log.Println(response.getFormattedStatus())
+    logInfo(response.getFormattedStatus())
 
     return &response, nil
 }
@@ -167,3 +168,12 @@ func (c *Client) basicAuthParams(domainname string) *Params {
     return &params
 }
 
+func SetVerbose(isVerbose bool) {
+    verbose = isVerbose
+}
+
+func logInfo(msg string, v ...interface{}) {
+    if verbose {
+        log.Printf(msg, v...)
+    }
+}
