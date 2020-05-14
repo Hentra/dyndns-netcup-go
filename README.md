@@ -36,7 +36,7 @@ dynamic dns needs.
 ## Installation 
 
 ### Manual
- 1. Download the lastest [binary](#) for your OS
+ 1. Download the lastest [binary](https://github.com/Hentra/dyndns-netcup-go/releases) for your OS
  2. `cd` to the file you downloaded and unzip
  3. Run `dyndns-netcup-go` as described in [Usage](#usage)
 
