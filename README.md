@@ -14,14 +14,15 @@ dynamic dns needs.
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
-  * [Implemented](#implemented)
-  * [Missing](#missing)
+    * [Implemented](#implemented)
+    * [Missing](#missing)
 * [Installation](#installation)
-  * [Manual](#manual)
-  * [From source](#from-source)
+    * [Manual](#manual)
+    * [From source](#from-source)
 * [Usage](#usage)
-  * [Prequisites](#prequisites)
-  * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
+    * [Prequisites](#prequisites)
+    * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
+        * [Commandline flags](#commandline-flags)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
@@ -68,13 +69,17 @@ description (in German) on how you get those.
 ### Run dyndns-netcup-go
 1. Move/rename the file `example.yml` to `config.yml` and fill out all the
 fields. There are some comments in the file for further information. 
-2. Run `dyndns-netcup-go` in the **same** directory as your configuration file and it will
+2. Run `dyndns-netcup-go -v` in the **same** directory as your configuration file and it will
 configure your DNS Records. You can specify the location of the
 configuration file with the `-c` or `-config` flag if you dont want to run
-it in the same directory.
+it in the same directory. To disable the output for information remove the `-v` flag. You will
+still get the output from errors.
 
 It might be necessary to run this program every few minutes. That interval
 depends on how you configured your TTL.
+
+#### Commandline flags
+For a list of all available command line flags run `dyndns-netcup-go -h`.
 
 ## Contributing 
 For any feature requests and or bugs open up an
