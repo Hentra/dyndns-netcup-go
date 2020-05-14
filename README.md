@@ -1,7 +1,7 @@
 # DYNDNS NETCUP GO
 ![Build](https://github.com/Hentra/dyndns-netcup-go/workflows/Build/badge.svg?branch=master)
 ![Issues](https://img.shields.io/github/issues/Hentra/dyndns-netcup-go)
-![Release](https://img.shields.io/github/release/Hentra/dyndns-netcup-go)
+![Release](https://img.shields.io/github/release/Hentra/dyndns-netcup-go?include_prereleases)
 
 Dyndns client for the netcup dns API written in go. Not
 related to netcup GmbH. It is **heavily** inspired by 
