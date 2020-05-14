@@ -71,7 +71,7 @@ func main() {
                     log.Printf("Destination of host '%s' is already public ip %s", host, ip)
                 }
             } else {
-                log.Printf("There is no A record for 's'. Creating and queueing for update", host)
+                log.Printf("There is no A record for '%s'. Creating and queueing for update", host)
                 record := netcup.DNSRecord{
                     Hostname: host,
                     Type: "A",
