@@ -3,16 +3,16 @@ APIKEY: 'yourapikey'
 APIPASSWORD: 'yourapipassword'
 
 DOMAINS:
-    - NAME: 'example.de'
-      IPV6: false
-      TTL: 300
-      HOSTS:
+    - NAME: 'example.de' # Your domain name without any subdomains
+      IPV6: false # Not supported yet
+      TTL: 300 # Time to live for this zone. Around 300 is good for dyndns.
+      HOSTS: # Every host that should get your public ip 
           - '@'
           - '*'
+          - 'cool.subdomain'
 
     - NAME: 'example.com'
       IPV6: false
-      TTL: 350
+      TTL: 350 
       HOSTS:
           - '@'
-          - '*'
