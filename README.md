@@ -6,6 +6,7 @@ project which might be also a good solution for your
 dynamic dns needs. 
 
 
+## Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
