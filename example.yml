@@ -1,0 +1,18 @@
+CUSTOMERNR: 12345
+APIKEY: 'yourapikey'
+APIPASSWORD: 'yourapipassword'
+
+DOMAINS:
+    - NAME: 'example.de'
+      IPV6: false
+      TTL: 300
+      HOSTS:
+          - '@'
+          - '*'
+
+    - NAME: 'example.com'
+      IPV6: false
+      TTL: 350
+      HOSTS:
+          - '@'
+          - '*'
