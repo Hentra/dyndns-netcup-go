@@ -1,4 +1,6 @@
-# dyndns-netcup-go 
+# DYNDNS NETCUP GO
+![Build](https://github.com/Hentra/dyndns-netcup-go/workflows/Build/badge.svg?branch=master)
+
 Dyndns client for the netcup dns API written in go. Not
 related to netcup GmbH. It is **heavily** inspired by 
 [this](https://github.com/stecklars/dynamic-dns-netcup-api) 
@@ -16,6 +18,8 @@ dynamic dns needs.
         * [Manual](#manual)
         * [From source](#from-source)
 * [Usage](#usage)
+        * [Prequisites](#prequisites)
+        * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
@@ -38,7 +42,7 @@ dynamic dns needs.
 ### Manual
  1. Download the lastest [binary](https://github.com/Hentra/dyndns-netcup-go/releases) for your OS
  2. `cd` to the file you downloaded and unzip
- 3. Run `dyndns-netcup-go` as described in [Usage](#usage)
+ 3. Put `dyndns-netcup-go` somewhere in your path
 
 ### From source 
 First, install [Go](https://golang.org/doc/install) as
@@ -46,16 +50,26 @@ recommended.  After that run following commands:
 
     git clone https://github.com/Hentra/dyndns-netcup-go.git cd 
     dyndns-netcup-go
-    go build
+    go install
 
-This will create a binary named `dyndns-netcup-go` in your current directory.
+This will create a binary named `dyndns-netcup-go` and install it to your go binary home.
 Refer to [Usage](#usage) for further information.
 
 ## Usage
- 1. Move/rename the file `example.yml` to `config.yml` and fill out all the
-fields. There are some comments in the file for further information. The
-filename **has** to be `config.yml`
- 2. Run `dyndns-netcup-go` and it will configure your DNS Records.
+
+### Prequisites
+* You need to have a netcup account and a domain, obviously.
+* Then you need an apikey and apipassword.
+  [Here](https://www.netcup-wiki.de/wiki/CCP_API#Authentifizierung) is a
+description (in German) on how you get those.
+
+### Run dyndns-netcup-go
+1. Move/rename the file `example.yml` to `config.yml` and fill out all the
+fields. There are some comments in the file for further information. 
+2. Run `dyndns-netcup-go` in the **same** directory as your configuration file and it will
+configure your DNS Records. You can specify the location of the
+configuration file with the `-c` or `-config` flag if you dont want to run
+it in the same directory.
 
 It might be necessary to run this program every few minutes. That interval
 depends on how you configured your TTL.

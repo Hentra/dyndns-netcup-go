@@ -4,11 +4,28 @@ import(
     "github.com/Hentra/dyndns-netcup-go/netcup"
     "strconv"
     "log"
+    "flag"
+)
+
+var (
+    configFile string
+    verbose bool
+)
+
+const (
+    defaultConfigFile = "config.yml"
+    usage = "Specify location of the config file"
 )
 
 
 func main() {
-    config, err := LoadConfig("config.yml")
+    flag.StringVar(&configFile, "config", defaultConfigFile, usage)
+    flag.StringVar(&configFile, "c", defaultConfigFile, usage + " (shorthand)")
+
+    flag.Parse()
+
+
+    config, err := LoadConfig(configFile)
     if err != nil {
         log.Println(err)
     }
