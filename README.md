@@ -9,20 +9,19 @@ related to netcup GmbH. It is **heavily** inspired by
 project which might be also a good solution for your 
 dynamic dns needs. 
 
-
 ## Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
-    * [Implemented](#implemented)
-    * [Missing](#missing)
+  * [Implemented](#implemented)
+  * [Missing](#missing)
 * [Installation](#installation)
-    * [Manual](#manual)
-    * [From source](#from-source)
+  * [Manual](#manual)
+  * [From source](#from-source)
 * [Usage](#usage)
-    * [Prequisites](#prequisites)
-    * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
-        * [Commandline flags](#commandline-flags)
+  * [Prequisites](#prequisites)
+  * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
+    * [Commandline flags](#commandline-flags)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
@@ -35,10 +34,15 @@ dynamic dns needs.
 * TTL update support
 * Creation of a DNS record if it doesn't already exists.
 * Multi host support (nice when you need to update both `@` and `*`) 
+* IPv6 support
+* Verbose option (when you specify `-v` you get alot of information)
 
 ### Missing
-* IPv6 support
-* Quiet option (output is always really verbose)
+
+* MX entry support
+
+There are currently no plans to implement this features. If you need those (or additional features) please
+open up an [Issue](https://github.com/Hentra/dyndns-netcup-go/issues).
 
 ## Installation 
 
@@ -51,16 +55,19 @@ dynamic dns needs.
 First, install [Go](https://golang.org/doc/install) as
 recommended.  After that run following commands:
 
-    git clone https://github.com/Hentra/dyndns-netcup-go.git cd 
-    dyndns-netcup-go
+    git clone https://github.com/Hentra/dyndns-netcup-go.git 
+    cd dyndns-netcup-go
     go install
 
-This will create a binary named `dyndns-netcup-go` and install it to your go binary home.
+This will create a binary named `dyndns-netcup-go` and install it to your go
+binary home.  Make sure your `GOPATH` environment variable is set. 
+
 Refer to [Usage](#usage) for further information.
 
 ## Usage
 
 ### Prequisites
+
 * You need to have a netcup account and a domain, obviously.
 * Then you need an apikey and apipassword.
   [Here](https://www.netcup-wiki.de/wiki/CCP_API#Authentifizierung) is a

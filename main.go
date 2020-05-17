@@ -9,7 +9,11 @@ import(
 
 var (
     configFile string
+    config *Config
+    ipv4 string
+    ipv6 string
     verbose bool
+    client *netcup.Client
 )
 
 const (
@@ -18,8 +22,16 @@ const (
     verboseUsage = "Use verbose output"
 )
 
-
 func main() {
+    login()
+
+    loadIPv4()
+    loadIPv6()
+
+    configureDomains()
+}
+
+func init() {
     flag.StringVar(&configFile, "config", defaultConfigFile, configUsage)
     flag.StringVar(&configFile, "c", defaultConfigFile, configUsage + " (shorthand)")
 
@@ -30,26 +42,50 @@ func main() {
 
     netcup.SetVerbose(verbose)
 
-    config, err := LoadConfig(configFile)
+    var err error
+    config, err = LoadConfig(configFile)
     if err != nil {
         log.Fatal(err)
     }
+}
 
-    client := netcup.NewClient(config.CustomerNumber, config.ApiKey, config.ApiPassword)
-
-    err = client.Login()
+func login() {
+    client = netcup.NewClient(config.CustomerNumber, config.ApiKey, config.ApiPassword)
+    err := client.Login()
     if err != nil {
         log.Fatal(err)
     }
+}
 
-    logInfo("Loading public IP address")
-    ip, err := getIP()
+func loadIPv4() {
+    logInfo("Loading public IPv4 address")
+    var err error
+    ipv4, err = getIPv4()
     if err != nil {
         log.Fatal(err)
     }
-    logInfo("Public IP address is %s", ip)
+    logInfo("Public IPv4 address is %s", ipv4)
+}
 
+func loadIPv6() {
+    logInfo("Loading public IPv6 address")
+    var err error
+    ipv6, err = getIPv6()
+    if err != nil {
+        log.Fatal(err)
+    }
+    logInfo("Public IPv6 address is %s", ipv6)
+
+}
+
+func configureDomains() {
     for _, domain := range config.Domains {
+        configureZone(domain)
+        configureRecords(domain)
+    }
+}
+
+func configureZone(domain Domain) {
         logInfo("Loading DNS Zone info for domain %s", domain.Name)
         err, zone := client.InfoDnsZone(domain.Name)
         if err != nil {
@@ -70,7 +106,9 @@ func main() {
                 log.Fatal(err)
             }
         }
+}
 
+func configureRecords(domain Domain) {
         logInfo("Loading DNS Records for domain %s", domain.Name)
         err, records := client.InfoDnsRecords(domain.Name)
         if err != nil {
@@ -79,27 +117,23 @@ func main() {
 
         var updateRecords []netcup.DNSRecord
         for _, host := range domain.Hosts {
-            if records.GetARecordOccurences(host) > 1 {
+            if records.GetRecordOccurences(host, "A") > 1 {
                 logInfo("Too many A records for host '%s'. Please specify only Hosts with one corresponding A record", host)
-                continue
-            }
-            if record, exists := records.GetARecord(host); exists {
-                logInfo("Found one A record for host '%s'.", host)
-                if record.Destination != ip {
-                    logInfo("IP address of host '%s' is %s but should be %s. Queue for update...", host, record.Destination, ip)
-                    record.Destination = ip
-                    updateRecords = append(updateRecords, *record)
-                } else {
-                    logInfo("Destination of host '%s' is already public ip %s", host, ip)
-                }
             } else {
-                logInfo("There is no A record for '%s'. Creating and queueing for update", host)
-                record := netcup.DNSRecord{
-                    Hostname: host,
-                    Type: "A",
-                    Destination: ip,
+                newRecord, needsUpdate := configureARecord(host, records)
+                if  needsUpdate {
+                    updateRecords = append(updateRecords, *newRecord)
                 }
-                updateRecords = append(updateRecords, record)
+            }
+            if domain.IPv6 {
+                if records.GetRecordOccurences(host, "AAAA") > 1 {
+                    logInfo("Too many AAAA records for host '%s'. Please specify only Hosts with one corresponding AAAA record", host)
+                } else {
+                    newRecord, needsUpdate := configureAAAARecord(host, records)
+                    if needsUpdate {
+                        updateRecords = append(updateRecords, *newRecord)
+                    }
+                }
             }
         }
 
@@ -113,7 +147,46 @@ func main() {
         } else {
             logInfo("No updates queued.")
         }
-    }
+}
+
+func configureARecord(host string, records *netcup.DNSRecordSet) (*netcup.DNSRecord, bool) {
+            var result *netcup.DNSRecord
+            if record, exists := records.GetRecord(host, "A"); exists {
+                logInfo("Found one A record for host '%s'.", host)
+                if record.Destination != ipv4 {
+                    logInfo("IP address of host '%s' is %s but should be %s. Queue for update...", host, record.Destination, ipv4)
+                    record.Destination = ipv4
+                    result = record
+                } else {
+                    logInfo("Destination of host '%s' is already public IPv4 %s", host, ipv4)
+                    return nil, false
+                }
+            } else {
+                logInfo("There is no A record for '%s'. Creating and queueing for update", host)
+                result = netcup.NewDNSRecord(host, "A", ipv4)
+            }
+
+            return result, true
+}
+
+func configureAAAARecord(host string, records *netcup.DNSRecordSet) (*netcup.DNSRecord, bool) {
+            var result *netcup.DNSRecord
+            if record, exists := records.GetRecord(host, "AAAA"); exists {
+                logInfo("Found one AAAA record for host '%s'.", host)
+                if record.Destination != ipv6 {
+                    logInfo("IP address of host '%s' is %s but should be %s. Queue for update...", host, record.Destination, ipv6)
+                    record.Destination = ipv6
+                    result = record
+                } else {
+                    logInfo("Destination of host '%s' is already public IPv6 %s", host, ipv6)
+                    return nil, false
+                }
+            } else {
+                logInfo("There is no AAAA record for '%s'. Creating and queueing for update", host)
+                result = netcup.NewDNSRecord(host, "AAAA", ipv6)
+            }
+
+            return result, true
 }
 
 func logInfo(msg string, v ...interface{}) {

@@ -2,17 +2,21 @@ CUSTOMERNR: 12345
 APIKEY: 'yourapikey'
 APIPASSWORD: 'yourapipassword'
 
-DOMAINS:
-    - NAME: 'example.de' # Your domain name without any subdomains
-      IPV6: false # Not supported yet
+DOMAINS: 
+    - NAME: 'example.de' # Your domain name without any subdomains.
+      IPV6: true # Whether the 'AAAA' entries of this host should be
+                 # updated with the IPv6 address or not.
       TTL: 300 # Time to live for this zone. Around 300 is good for dyndns.
       HOSTS: # Every host that should get your public ip 
           - '@'
           - '*'
-          - 'cool.subdomain'
+          - 'cool.subdomain' # You could also specify subdomains longer than this.
 
     - NAME: 'example.com'
       IPV6: false
       TTL: 350 
       HOSTS:
           - '@'
+
+    # You can add how many domains as you like. Keep in mind that more domains also 
+    # means more request -> more time.

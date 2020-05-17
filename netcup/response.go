@@ -49,23 +49,31 @@ func NewDNSRecordSet(records []DNSRecord) *DNSRecordSet {
     }
 }
 
-func (r *DNSRecordSet) GetARecordOccurences(hostname string) int {
+func (r *DNSRecordSet) GetRecordOccurences(hostname, dnstype string) int {
     result := 0
     for _, record := range r.DNSRecords {
-        if record.Hostname == hostname && record.Type == "A" {
+        if record.Hostname == hostname && record.Type == dnstype {
             result++
         }
     }
     return result
 }
 
-func (r *DNSRecordSet) GetARecord(name string) (*DNSRecord, bool) {
+func (r *DNSRecordSet) GetRecord(name, dnstype string) (*DNSRecord, bool) {
     for _, record := range r.DNSRecords {
-        if record.Hostname == name && record.Type == "A" {
+        if record.Hostname == name && record.Type == dnstype {
             return &record, true
         }
     }
     return nil, false
+}
+
+func NewDNSRecord(hostname, dnstype, destination string) *DNSRecord {
+    return &DNSRecord{
+        Hostname: hostname,
+        Type: dnstype,
+        Destination: destination,
+    }
 }
 
 func (r *Response) isError() bool {
