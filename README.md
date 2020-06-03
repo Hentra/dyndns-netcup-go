@@ -32,10 +32,10 @@ dynamic dns needs.
 * Multi domain support
 * Subdomain support
 * TTL update support
-* Creation of a DNS record if it doesn't already exists.
+* Creation of a DNS record if it doesn't already exist.
 * Multi host support (nice when you need to update both `@` and `*`) 
 * IPv6 support
-* Verbose option (when you specify `-v` you get alot of information)
+* Verbose option (when you specify `-v` you get plenty information)
 
 ### Missing
 
@@ -60,7 +60,7 @@ recommended.  After that run following commands:
     go install
 
 This will create a binary named `dyndns-netcup-go` and install it to your go
-binary home.  Make sure your `GOPATH` environment variable is set. 
+binary home. Make sure your `GOPATH` environment variable is set. 
 
 Refer to [Usage](#usage) for further information.
 

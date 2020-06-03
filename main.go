@@ -5,6 +5,7 @@ import(
     "strconv"
     "log"
     "flag"
+    "time"
 )
 
 var (
@@ -14,6 +15,7 @@ var (
     ipv6 string
     verbose bool
     client *netcup.Client
+    cache *Cache
 )
 
 const (
@@ -29,6 +31,13 @@ func main() {
     loadIPv6()
 
     configureDomains()
+
+    if cache != nil {
+        err :=  cache.Store()
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
 }
 
 func init() {
@@ -47,6 +56,20 @@ func init() {
     if err != nil {
         log.Fatal(err)
     }
+
+    if config.IPCacheTimeout > 0 {
+        cache, err = NewCache(config.IPCache, time.Duration(config.IPCacheTimeout) * time.Second)
+        if err != nil {
+            logWarning("Cannot aquire cachefile: " + err.Error())
+        } else {
+            err = cache.Load() 
+            if err != nil {
+                log.Fatal(err)
+            }
+        }
+
+    }
+
 }
 
 func login() {
@@ -80,9 +103,42 @@ func loadIPv6() {
 
 func configureDomains() {
     for _, domain := range config.Domains {
-        configureZone(domain)
-        configureRecords(domain)
+        if needsUpdate(domain) {
+            configureZone(domain)
+            configureRecords(domain)
+        }
     }
+
+}
+
+func needsUpdate(domain Domain) bool {
+    if cache == nil {
+        return true
+    }
+
+    update := false
+
+    for _, host := range domain.Hosts {
+        hostIPv4 := cache.GetIPv4(domain.Name, host)
+        if hostIPv4 == "" || hostIPv4 != ipv4 {
+            cache.SetIPv4(domain.Name, host, ipv4)
+            update = true
+        }
+
+        if domain.IPv6 {
+            hostIPv6 := cache.GetIPv6(domain.Name, host)
+            if hostIPv6 == "" || hostIPv6 != ipv6 {
+                cache.SetIPv6(domain.Name, host, ipv6)
+                update = true
+            }
+        }
+
+        if !update {
+            logInfo("Host %s is in cache and needs no update", host)
+        }
+    }
+
+    return update
 }
 
 func configureZone(domain Domain) {
@@ -193,4 +249,8 @@ func logInfo(msg string, v ...interface{}) {
     if verbose {
         log.Printf(msg, v...)
     }
+}
+
+func logWarning(msg string, v ...interface{}) {
+    log.Printf("[Warning]: " + msg, v...)
 }

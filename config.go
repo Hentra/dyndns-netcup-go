@@ -9,6 +9,8 @@ type Config struct {
     CustomerNumber int `yaml:"CUSTOMERNR"`
     ApiKey string `yaml:"APIKEY"`
     ApiPassword string `yaml:"APIPASSWORD"`
+    IPCache string `yaml:"IP-CACHE"`
+    IPCacheTimeout int `yaml:"IP-CACHE-TIMEOUT"`
     Domains []Domain `yaml:"DOMAINS"`
 }
 
