@@ -166,7 +166,6 @@ func (c *Cache) Store() error {
 
     for _, entry := range c.entries {
         err = writer.Write(entry.toArray())
-        log.Printf("Written %s, %s, %s to %s", entry.host, entry.ipv4, entry.ipv6, c.location)
         if err != nil {
             return err
         }
