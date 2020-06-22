@@ -2,7 +2,6 @@ package main
 
 import(
     "encoding/csv"
-    "log"
     "io"
     "os"
     "time"
