@@ -22,6 +22,7 @@ dynamic dns needs.
   * [Prequisites](#prequisites)
   * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
     * [Commandline flags](#commandline-flags)
+  * [Cache](#cache)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
@@ -36,6 +37,7 @@ dynamic dns needs.
 * Multi host support (nice when you need to update both `@` and `*`) 
 * IPv6 support
 * Verbose option (when you specify `-v` you get plenty information)
+* Cache IP of the executing machine and only update when it changes
 
 ### Missing
 
@@ -78,7 +80,7 @@ description (in German) on how you get those.
 fields. There are some comments in the file for further information. 
 2. Run `dyndns-netcup-go -v` in the **same** directory as your configuration file and it will
 configure your DNS Records. You can specify the location of the
-configuration file with the `-c` or `-config` flag if you dont want to run
+configuration file with the `-c` or `-config` flag if you don't want to run
 it in the same directory. To disable the output for information remove the `-v` flag. You will
 still get the output from errors.
 
@@ -87,6 +89,18 @@ depends on how you configured your TTL.
 
 #### Commandline flags
 For a list of all available command line flags run `dyndns-netcup-go -h`.
+
+### Cache
+Without the cache the program would lookup its ip addresses and fetch the DNS
+records from netcup. After that it will compare the specified hosts in the DNS
+records with the current ip addresses and update if necessary. 
+
+As reported in [this issue](https://github.com/Hentra/dyndns-netcup-go/issues/1)
+it would be also possible to store the ip addresses between two runs of the
+program and only fetch DNS records from netcup when the differ. 
+
+To enable the cache configure the two variables `IP-CACHE` and
+`IP-CACHE-LOCATION` as according to the comments in `example.yml`.
 
 ## Contributing 
 For any feature requests and or bugs open up an
