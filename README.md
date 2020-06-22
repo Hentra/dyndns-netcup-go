@@ -91,13 +91,13 @@ depends on how you configured your TTL.
 For a list of all available command line flags run `dyndns-netcup-go -h`.
 
 ### Cache
-Without the cache the program would lookup its ip addresses and fetch the DNS
+Without the cache the application would lookup its ip addresses and fetch the DNS
 records from netcup. After that it will compare the specified hosts in the DNS
 records with the current ip addresses and update if necessary. 
 
 As reported in [this issue](https://github.com/Hentra/dyndns-netcup-go/issues/1)
 it would be also possible to store the ip addresses between two runs of the
-program and only fetch DNS records from netcup when the differ. 
+application and only fetch DNS records from netcup when they differ. 
 
 To enable the cache configure the two variables `IP-CACHE` and
 `IP-CACHE-LOCATION` as according to the comments in `example.yml`.
