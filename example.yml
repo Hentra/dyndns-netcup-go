@@ -7,8 +7,11 @@ APIPASSWORD: 'yourapipassword'
 # on Unix sytems it will use $XDG_CACHE_HOME or $HOME/.cache.
 IP-CACHE: '/home/user/.cache/dyndns.cache'
 
-# Time in seconds on how long to wait until checking if the cached ip is still
-# valid. To disable the cache set the value to 0.
+# Time in seconds on how long to wait until rechecking the netcup DNS records.
+# If the cache file hasn't been touched for the specified amount of seconds the program
+# will refetch the DNS records and compare the ip addresses.
+#
+# To disable the cache set the value to 0.
 IP-CACHE-TIMEOUT: 3600
 
 DOMAINS: 
