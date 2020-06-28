@@ -92,7 +92,7 @@ func (c *Cache) SetIPv4(domain, host, ipv4 string) {
     entry := c.getEntry(domain, host)
     if entry == nil {
         newEntry := CacheEntry {
-            host: host+domain,
+            host: host + "." + domain,
             ipv4: ipv4,
             ipv6: "",
         }
@@ -109,7 +109,7 @@ func (c *Cache) SetIPv6(domain, host, ipv6 string) {
     entry := c.getEntry(domain, host)
     if entry == nil {
         newEntry := CacheEntry {
-            host: host+domain,
+            host: host + "." + domain,
             ipv4: "",
             ipv6: ipv6,
         }
@@ -142,7 +142,7 @@ func (c *Cache) GetIPv6(domain, host string) string {
 
 func (c *Cache) getEntry(domain, host string) *CacheEntry {
     for i, entry := range c.entries {
-        if entry.host == (host+domain) {
+        if entry.host == (host + "." + domain) {
             return &c.entries[i]
         }
     }
