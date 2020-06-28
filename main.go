@@ -28,7 +28,10 @@ func main() {
     login()
 
     loadIPv4()
-    loadIPv6()
+
+    if iPv6Enabled() {
+        loadIPv6()
+    }
 
     configureDomains()
 
@@ -99,6 +102,16 @@ func loadIPv6() {
     }
     logInfo("Public IPv6 address is %s", ipv6)
 
+}
+
+func iPv6Enabled() bool {
+    for _, domain := range config.Domains {
+        if domain.IPv6 {
+            return true
+        }
+    }
+
+    return false
 }
 
 func configureDomains() {
