@@ -27,7 +27,9 @@ const (
 func main() {
     login()
 
-    loadIPv4()
+    if iPv4Enabled() {
+        loadIPv4()
+    }
 
     if iPv6Enabled() {
         loadIPv6()
@@ -114,6 +116,16 @@ func iPv6Enabled() bool {
     return false
 }
 
+func iPv4Enabled() bool {
+    for _, domain := range config.Domains {
+        if domain.IPv4 {
+            return true
+        }
+    }
+
+    return false
+}
+
 func configureDomains() {
     for _, domain := range config.Domains {
         if needsUpdate(domain) {
@@ -132,10 +144,12 @@ func needsUpdate(domain Domain) bool {
     update := false
 
     for _, host := range domain.Hosts {
-        hostIPv4 := cache.GetIPv4(domain.Name, host)
-        if hostIPv4 == "" || hostIPv4 != ipv4 {
-            cache.SetIPv4(domain.Name, host, ipv4)
-            update = true
+        if domain.IPv4 {
+            hostIPv4 := cache.GetIPv4(domain.Name, host)
+            if hostIPv4 == "" || hostIPv4 != ipv4 {
+                cache.SetIPv4(domain.Name, host, ipv4)
+                update = true
+            }
         }
 
         if domain.IPv6 {
@@ -186,12 +200,14 @@ func configureRecords(domain Domain) {
 
         var updateRecords []netcup.DNSRecord
         for _, host := range domain.Hosts {
-            if records.GetRecordOccurences(host, "A") > 1 {
-                logInfo("Too many A records for host '%s'. Please specify only Hosts with one corresponding A record", host)
-            } else {
-                newRecord, needsUpdate := configureARecord(host, records)
-                if  needsUpdate {
-                    updateRecords = append(updateRecords, *newRecord)
+            if domain.IPv4 {
+                if records.GetRecordOccurences(host, "A") > 1 {
+                    logInfo("Too many A records for host '%s'. Please specify only Hosts with one corresponding A record", host)
+                } else {
+                    newRecord, needsUpdate := configureARecord(host, records)
+                    if  needsUpdate {
+                        updateRecords = append(updateRecords, *newRecord)
+                    }
                 }
             }
             if domain.IPv6 {
