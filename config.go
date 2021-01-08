@@ -17,7 +17,7 @@ type Config struct {
 type Domain struct {
     Name string `yaml:"NAME"`
     IPv6 bool `yaml:"IPV6"`
-    IPv4 bool `yaml:"IPV4`
+    IPv4 bool `yaml:"IPV4"`
     TTL int `yaml:"TTL"`
     Hosts []string `yaml:"HOSTS"`
 }
