@@ -18,6 +18,9 @@ DOMAINS:
     - NAME: 'example.de' # Your domain name without any subdomains.
       IPV6: true # Whether the 'AAAA' entries of this host should be
                  # updated with the IPv6 address or not.
+      IPV4: true # Whether the 'A' entries of this host should be
+                 # updated with the IPv4 address or not. This option defaults
+                 # to true when not present.
       TTL: 300 # Time to live for this zone. Around 300 is good for dyndns.
       HOSTS: # Every host that should get your public ip 
           - '@'
@@ -26,6 +29,7 @@ DOMAINS:
 
     - NAME: 'example.com'
       IPV6: false
+      IPV4: true
       TTL: 350 
       HOSTS:
           - '@'

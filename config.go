@@ -17,6 +17,7 @@ type Config struct {
 type Domain struct {
     Name string `yaml:"NAME"`
     IPv6 bool `yaml:"IPV6"`
+    IPv4 bool `yaml:"IPV4"`
     TTL int `yaml:"TTL"`
     Hosts []string `yaml:"HOSTS"`
 }
@@ -34,4 +35,17 @@ func LoadConfig(filename string) (*Config, error) {
     }
 
     return &config, nil
+}
+
+func (d *Domain) UnmarshalYAML(unmarshal func(interface{}) error) error {
+    type rawDomain Domain
+    raw := rawDomain{
+        IPv4: true,
+    }
+    if err := unmarshal(&raw); err != nil {
+        return err
+    }
+
+    *d = Domain(raw)
+    return nil
 }
