@@ -78,7 +78,7 @@ func init() {
 }
 
 func login() {
-	client = netcup.NewClient(config.CustomerNumber, config.ApiKey, config.ApiPassword)
+	client = netcup.NewClient(config.CustomerNumber, config.APIKey, config.APIPassword)
 	err := client.Login()
 	if err != nil {
 		log.Fatal(err)
@@ -170,7 +170,7 @@ func needsUpdate(domain Domain) bool {
 
 func configureZone(domain Domain) {
 	logInfo("Loading DNS Zone info for domain %s", domain.Name)
-	err, zone := client.InfoDnsZone(domain.Name)
+	zone, err := client.InfoDNSZone(domain.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -184,7 +184,7 @@ func configureZone(domain Domain) {
 		logInfo("TTL for %s is %d but should be %d. Updating...", domain.Name, zoneTTL, domain.TTL)
 
 		zone.TTL = strconv.Itoa(domain.TTL)
-		err = client.UpdateDnsZone(domain.Name, zone)
+		err = client.UpdateDNSZone(domain.Name, zone)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -193,7 +193,7 @@ func configureZone(domain Domain) {
 
 func configureRecords(domain Domain) {
 	logInfo("Loading DNS Records for domain %s", domain.Name)
-	err, records := client.InfoDnsRecords(domain.Name)
+	records, err := client.InfoDNSRecords(domain.Name)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -225,7 +225,7 @@ func configureRecords(domain Domain) {
 	if len(updateRecords) > 0 {
 		logInfo("Performing update on all queued records")
 		updateRecordSet := netcup.NewDNSRecordSet(updateRecords)
-		err = client.UpdateDnsRecords(domain.Name, updateRecordSet)
+		err = client.UpdateDNSRecords(domain.Name, updateRecordSet)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -236,7 +236,7 @@ func configureRecords(domain Domain) {
 
 func configureARecord(host string, records *netcup.DNSRecordSet) (*netcup.DNSRecord, bool) {
 	var result *netcup.DNSRecord
-	if record, exists := records.GetRecord(host, "A"); exists {
+	if record := records.GetRecord(host, "A"); record != nil {
 		logInfo("Found one A record for host '%s'.", host)
 		if record.Destination != ipv4 {
 			logInfo("IP address of host '%s' is %s but should be %s. Queue for update...", host, record.Destination, ipv4)
@@ -256,7 +256,7 @@ func configureARecord(host string, records *netcup.DNSRecordSet) (*netcup.DNSRec
 
 func configureAAAARecord(host string, records *netcup.DNSRecordSet) (*netcup.DNSRecord, bool) {
 	var result *netcup.DNSRecord
-	if record, exists := records.GetRecord(host, "AAAA"); exists {
+	if record := records.GetRecord(host, "AAAA"); record != nil {
 		logInfo("Found one AAAA record for host '%s'.", host)
 		if record.Destination != ipv6 {
 			logInfo("IP address of host '%s' is %s but should be %s. Queue for update...", host, record.Destination, ipv6)

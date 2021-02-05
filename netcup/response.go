@@ -4,6 +4,7 @@ import (
     "encoding/json"
 )
 
+// Response represents a response from the netcup api.
 type Response struct {
     ServerRequestID string `json:"serverrequestid"`
     ClientRequestID string `json:"clientrequestid"`
@@ -15,10 +16,13 @@ type Response struct {
     ResponseData json.RawMessage `json:"responsedata"`
 }
 
+// LoginResponse represents the response from the netcup api which is unique 
+// to the LoginRequest.
 type LoginResponse struct {
-    ApiSessionid string `json:"apisessionid"`
+    APISessionid string `json:"apisessionid"`
 }
 
+// DNSZone represents a dns zone.
 type DNSZone struct {
     DomainName string `json:"name"`
     TTL string `json:"ttl"`
@@ -29,6 +33,7 @@ type DNSZone struct {
     DNSSecStatus bool `json:"dnssecstatus"`
 }
 
+// DNSRecord represents a dns record.
 type DNSRecord struct {
     ID string `json:"id"`
     Hostname string `json:"hostname"`
@@ -39,16 +44,20 @@ type DNSRecord struct {
     State string `json:"state"`
 }
 
+// DNSRecordSet represents a dns record set.
 type DNSRecordSet struct {
     DNSRecords []DNSRecord `json:"dnsrecords"`
 }
 
+// NewDNSRecordSet return a new DNSRecordSet containing specified DNSRecords.
 func NewDNSRecordSet(records []DNSRecord) *DNSRecordSet {
     return &DNSRecordSet{
         DNSRecords: records,
     }
 }
 
+// GetRecordOccurences returns the amount of times a specified hostname with a dnstype
+// occures in the DNSRecordSet.
 func (r *DNSRecordSet) GetRecordOccurences(hostname, dnstype string) int {
     result := 0
     for _, record := range r.DNSRecords {
@@ -59,15 +68,18 @@ func (r *DNSRecordSet) GetRecordOccurences(hostname, dnstype string) int {
     return result
 }
 
-func (r *DNSRecordSet) GetRecord(name, dnstype string) (*DNSRecord, bool) {
+// GetRecord returns DNSRecord that matches both the name and dnstype specified or nil 
+// if its not inside the DNSRecordSet.
+func (r *DNSRecordSet) GetRecord(name, dnstype string) *DNSRecord {
     for _, record := range r.DNSRecords {
         if record.Hostname == name && record.Type == dnstype {
-            return &record, true
+            return &record
         }
     }
-    return nil, false
+    return nil
 }
 
+// NewDNSRecord returns a new DNSRecord with specified hostname, dnstype and destination.
 func NewDNSRecord(hostname, dnstype, destination string) *DNSRecord {
     return &DNSRecord{
         Hostname: hostname,
