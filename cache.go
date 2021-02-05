@@ -27,7 +27,7 @@ type CacheEntry struct {
 	ipv6 string
 }
 
-// NewCache returns a new cache struct with a specified location and timeout. When 
+// NewCache returns a new cache struct with a specified location and timeout. When
 // the location is an empty string it will set the cache location to the user cache
 // dir.
 func NewCache(location string, timeout time.Duration) (*Cache, error) {
@@ -50,8 +50,8 @@ func NewCache(location string, timeout time.Duration) (*Cache, error) {
 	return &Cache{location, timeout, false, nil}, nil
 }
 
-// Load loads the cache from its location. When there is no file at the 
-// cache location it will do nothing. If the last modification to the file 
+// Load loads the cache from its location. When there is no file at the
+// cache location it will do nothing. If the last modification to the file
 // was made before the cache timeout it will ignore the file content.
 func (c *Cache) Load() error {
 	csvfile, err := os.Open(c.location)
@@ -60,7 +60,7 @@ func (c *Cache) Load() error {
 		if os.IsNotExist(err) {
 			return nil
 		}
-	    return err
+		return err
 	}
 
 	fileinfo, err := csvfile.Stat()
@@ -133,7 +133,7 @@ func (c *Cache) SetIPv6(domain, host, ipv6 string) {
 	c.changes = true
 }
 
-// GetIPv4 returns the ipv4 address of a specified domain and host. If 
+// GetIPv4 returns the ipv4 address of a specified domain and host. If
 // this ipv4 address is not present in the cache it will return an empty string.
 func (c *Cache) GetIPv4(domain, host string) string {
 	entry := c.getEntry(domain, host)
@@ -144,7 +144,7 @@ func (c *Cache) GetIPv4(domain, host string) string {
 	return entry.ipv4
 }
 
-// GetIPv6 returns the ipv6 address of a specified domain and host. If 
+// GetIPv6 returns the ipv6 address of a specified domain and host. If
 // this ipv6 address is not present in the cache it will return an empty string.
 func (c *Cache) GetIPv6(domain, host string) string {
 	entry := c.getEntry(domain, host)
@@ -165,7 +165,7 @@ func (c *Cache) getEntry(domain, host string) *CacheEntry {
 	return nil
 }
 
-// Store stores the cache to its location on the disk. If the 
+// Store stores the cache to its location on the disk. If the
 // cache location does not exist it will create the necessary file.
 func (c *Cache) Store() error {
 	if !c.changes {

@@ -42,7 +42,7 @@ func LoadConfig(filename string) (*Config, error) {
 	return &config, nil
 }
 
-// UnmarshalYAML is implemented to override the default value of 
+// UnmarshalYAML is implemented to override the default value of
 // the IPv4 field of a Domain with true.
 func (d *Domain) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	type rawDomain Domain
