@@ -124,7 +124,7 @@ func (c *Client) InfoDNSZone(domainname string) (*DNSZone, error) {
 	return &dnsZone, nil
 }
 
-// InfoDNSRecords retuns a DNSRecordSet for a specified domain
+// InfoDNSRecords returns a DNSRecordSet for a specified domain
 func (c *Client) InfoDNSRecords(domainname string) (*DNSRecordSet, error) {
 	params, err := c.basicAuthParams(domainname)
 	if err != nil {
@@ -196,7 +196,7 @@ func (c *Client) basicAuthParams(domainname string) (*Params, error) {
 	return &params, nil
 }
 
-// SetVerbose sets the verboseness of the output. If set to true the reponse to every
+// SetVerbose sets the verboseness of the output. If set to true the response to every
 // request will be send to stdout.
 func SetVerbose(isVerbose bool) {
 	verbose = isVerbose

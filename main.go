@@ -65,7 +65,7 @@ func init() {
 	if config.IPCacheTimeout > 0 {
 		cache, err = NewCache(config.IPCache, time.Duration(config.IPCacheTimeout)*time.Second)
 		if err != nil {
-			logWarning("Cannot aquire cachefile: " + err.Error())
+			logWarning("Cannot acquire cachefile: " + err.Error())
 		} else {
 			err = cache.Load()
 			if err != nil {
