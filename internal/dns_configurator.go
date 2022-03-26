@@ -34,7 +34,7 @@ func (dnsc *DNSConfiguratorService) Configure() {
 		dnsc.logger.Error(err)
 	}
 
-	dnsc.configureDomains(ipAddresses.IPv6, ipAddresses.IPv6)
+	dnsc.configureDomains(ipAddresses.IPv4, ipAddresses.IPv6)
 
 	if dnsc.config.CacheEnabled() {
 		err := dnsc.cache.Store()
