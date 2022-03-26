@@ -18,17 +18,7 @@ jobs:
       with:
         go-version: ^1.18
       id: go
-
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-
-    - name: Build
-      run: go build -v cmd/dyndns-netcup-go/main.go
+    - name: CI Tasks
+      run: make ci

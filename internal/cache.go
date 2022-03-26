@@ -41,7 +41,10 @@ func NewCache(location string, timeout time.Duration) (*Cache, error) {
 		location += defaultDir
 
 		if _, err := os.Stat(location); os.IsNotExist(err) {
-			os.MkdirAll(location, 0700)
+			err = os.MkdirAll(location, 0700)
+			if err != nil {
+				return nil, err
+			}
 		}
 
 		location += "/" + defaultIPCache
@@ -55,7 +58,6 @@ func NewCache(location string, timeout time.Duration) (*Cache, error) {
 // was made before the cache timeout it will ignore the file content.
 func (c *Cache) Load() error {
 	csvfile, err := os.Open(c.location)
-	defer csvfile.Close()
 	if err != nil {
 		if os.IsNotExist(err) {
 			return nil
@@ -68,7 +70,7 @@ func (c *Cache) Load() error {
 		return err
 	}
 
-	if time.Now().Sub(fileinfo.ModTime()) > c.timeout {
+	if time.Since(fileinfo.ModTime()) > c.timeout {
 		return nil
 	}
 
@@ -92,7 +94,7 @@ func (c *Cache) Load() error {
 		c.entries = append(c.entries, entry)
 	}
 
-	return nil
+	return csvfile.Close()
 }
 
 // SetIPv4 sets the ipv4 address for a specified domain and host to

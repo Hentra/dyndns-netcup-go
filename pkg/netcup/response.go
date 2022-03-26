@@ -88,10 +88,6 @@ func NewDNSRecord(hostname, dnstype, destination string) *DNSRecord {
 	}
 }
 
-func (r *Response) isError() bool {
-	return r.Status == "error"
-}
-
 func (r *Response) isSuccess() bool {
 	return r.Status == "success"
 }
