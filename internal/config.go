@@ -1,8 +1,9 @@
-package main
+package internal
 
 import (
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Config represents a config.
@@ -55,4 +56,34 @@ func (d *Domain) UnmarshalYAML(unmarshal func(interface{}) error) error {
 
 	*d = Domain(raw)
 	return nil
+}
+
+// CacheEnabled returns whether the cache is enabled in the
+// configuration.
+func (c *Config) CacheEnabled() bool {
+	return c.IPCacheTimeout > 0
+}
+
+// IPv6Enabled returns true if at least one domain needs the AAAA
+// record configured.
+func (c *Config) IPv6Enabled() bool {
+	for _, domain := range c.Domains {
+		if domain.IPv6 {
+			return true
+		}
+	}
+
+	return false
+}
+
+// IPv4Enabled returns true if at least one domain needs the A
+// record configured.
+func (c *Config) IPv4Enabled() bool {
+	for _, domain := range c.Domains {
+		if domain.IPv4 {
+			return true
+		}
+	}
+
+	return false
 }

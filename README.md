@@ -77,8 +77,8 @@ Refer to [Usage](#usage) for further information.
 description (in German) on how you get those.
 
 ### Run dyndns-netcup-go
-1. Move/rename the file `example.yml` to `config.yml` and fill out all the
-fields. There are some comments in the file for further information. 
+1. Move/rename the [example configuration](./config/example.yml) `config/example.yml` 
+to `config.yml` and fill out all the fields. There are some comments in the file for further information. 
 2. Run `dyndns-netcup-go -v` in the **same** directory as your configuration file and it will
 configure your DNS Records. You can specify the location of the
 configuration file with the `-c` or `-config` flag if you don't want to run
