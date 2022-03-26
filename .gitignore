@@ -1,4 +1,4 @@
 config.yml
 go.sum
 dyndns-netcup-go
-build/
+dist/
