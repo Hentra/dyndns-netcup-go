@@ -4,50 +4,52 @@
 [![Release](https://img.shields.io/github/release/Hentra/dyndns-netcup-go?include_prereleases)](https://github.com/Hentra/dyndns-netcup-go/releases)
 [![Go Report Card](https://goreportcard.com/badge/github.com/Hentra/dyndns-netcup-go)](https://goreportcard.com/report/github.com/Hentra/dyndns-netcup-go)
 
-Dyndns client for the netcup dns API written in go. Not
+Dyndns client for the netcup DNS API written in go. Not
 related to netcup GmbH. It is **heavily** inspired by 
 [this](https://github.com/stecklars/dynamic-dns-netcup-api) 
 project which might be also a good solution for your 
-dynamic dns needs. 
+dynamic DNS needs. 
 
 ## Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
-  * [Implemented](#implemented)
-  * [Missing](#missing)
 * [Installation](#installation)
-  * [Manual](#manual)
-  * [From source](#from-source)
+	* [Docker](#docker)
+	* [Manual](#manual)
+	* [From source](#from-source)
 * [Usage](#usage)
-  * [Prequisites](#prequisites)
-  * [Run dyndns-netcup-go](#run-dyndns-netcup-go)
-    * [Commandline flags](#commandline-flags)
-  * [Cache](#cache)
+	* [Prequisites](#prequisites)
+	* [Run dyndns-netcup-go](#run-dyndns-netcup-go)
+		* [Commandline flags](#commandline-flags)
+	* [Cache](#cache)
 * [Contributing](#contributing)
 
 <!-- vim-markdown-toc -->
 
 ## Features
 
-### Implemented
 * Multi domain support
 * Subdomain support
 * TTL update support
-* Creation of a DNS record if it doesn't already exist.
+* Creation of a DNS record if it doesn't already exist
 * Multi host support (nice when you need to update both `@` and `*`) 
 * IPv6 support
-* Verbose option (when you specify `-v` you get plenty information)
-* Cache IP of the executing machine and only update when it changes
 
-### Missing
-
-* MX entry support
-
-There are currently no plans to implement this features. If you need those (or additional features) please
-open up an [Issue](https://github.com/Hentra/dyndns-netcup-go/issues).
+If you need additional features please open up an
+[Issue](https://github.com/Hentra/dyndns-netcup-go/issues).
 
 ## Installation 
+
+### Docker
+
+    docker run -d \
+        -v $(pwd)/config.yml:/config.yml \
+        -e INTERVAL=300 \
+        ghcr.io/hentra/dyndns-netcup-go
+
+The environment variable `INTERVAL` defines the interval of DNS updates in
+seconds. 
 
 ### Manual
  1. Download the lastest [binary](https://github.com/Hentra/dyndns-netcup-go/releases) for your OS
