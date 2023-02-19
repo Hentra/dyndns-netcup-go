@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  dyn-dns:
+    image: ghcr.io/hentra/dyndns-netcup-go
+    container_name: Netcup-Dyn-DNS
+    environment:
+      - INTERVAL=300
+    volumes:
+      - ./config.yml:/config.yml
+    restart: unless-stopped
