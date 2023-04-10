@@ -29,7 +29,7 @@ func NewDNSConfigurator(config *Config, cache *Cache, logger *Logger) *DNSConfig
 func (dnsc *DNSConfiguratorService) Configure() {
 	dnsc.login()
 
-	ipAddresses, err := GetAddrInfo(dnsc.config.IPv4Enabled(), dnsc.config.IPv6Enabled())
+	ipAddresses, err := GetAddrInfo(dnsc.config.IPv4Enabled(), dnsc.config.IPv6Enabled(), dnsc.config.IPv4Service, dnsc.config.IPv6Service)
 	if err != nil {
 		dnsc.logger.Error(err)
 	}

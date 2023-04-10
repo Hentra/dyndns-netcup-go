@@ -13,6 +13,8 @@ type Config struct {
 	APIPassword    string   `yaml:"APIPASSWORD"`
 	IPCache        string   `yaml:"IP-CACHE"`
 	IPCacheTimeout int      `yaml:"IP-CACHE-TIMEOUT"`
+	IPv4Service    string   `yaml:"IPV4-SERVICE"`
+	IPv6Service    string   `yaml:"IPV6-SERVICE"`
 	Domains        []Domain `yaml:"DOMAINS"`
 }
 
