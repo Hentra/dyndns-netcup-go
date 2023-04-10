@@ -12,11 +12,11 @@ type AddrInfo struct {
 }
 
 // GetAddrInfo retrieves an AddrInfo instance
-func GetAddrInfo(ipv4 bool, ipv6 bool) (*AddrInfo, error) {
+func GetAddrInfo(ipv4 bool, ipv6 bool, ipv4service string, ipv6service string) (*AddrInfo, error) {
 	adresses := &AddrInfo{}
 
 	if ipv4 {
-		address, err := getIPv4()
+		address, err := getIP(ipv4service)
 		if err != nil {
 			return nil, err
 		}
@@ -24,7 +24,7 @@ func GetAddrInfo(ipv4 bool, ipv6 bool) (*AddrInfo, error) {
 	}
 
 	if ipv6 {
-		address, err := getIPv6()
+		address, err := getIP(ipv6service)
 		if err != nil {
 			return nil, err
 		}
@@ -35,15 +35,7 @@ func GetAddrInfo(ipv4 bool, ipv6 bool) (*AddrInfo, error) {
 	return adresses, nil
 }
 
-func getIPv4() (string, error) {
-	return do("https://api.ipify.org?format=text")
-}
-
-func getIPv6() (string, error) {
-	return do("https://api6.ipify.org?format=text")
-}
-
-func do(url string) (string, error) {
+func getIP(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
