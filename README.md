@@ -35,6 +35,7 @@ dynamic DNS needs.
 * Creation of a DNS record if it doesn't already exist
 * Multi host support (nice when you need to update both `@` and `*`) 
 * IPv6 support
+* Allow setting custom IP service
 
 If you need additional features please open up an
 [Issue](https://github.com/Hentra/dyndns-netcup-go/issues).
