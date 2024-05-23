@@ -2,6 +2,8 @@ package internal
 
 import (
 	"io/ioutil"
+	"os"
+	"strconv"
 
 	"gopkg.in/yaml.v2"
 )
@@ -38,6 +40,32 @@ func LoadConfig(filename string) (*Config, error) {
 	err = yaml.Unmarshal(yamlFile, &config)
 	if err != nil {
 		return nil, err
+	}
+
+	// Fetch secrets from environment variables
+	// This way they may be stored in a secret manager and injected
+	//
+	// The environment variables are:
+	// - CUSTOMERNR
+	// - APIKEY
+	// - APIPASSWORD
+	customerNumberOverride := os.Getenv("CUSTOMERNR")
+	if customerNumberOverride != "" {
+		nr, err := strconv.Atoi(customerNumberOverride)
+		if err != nil {
+			return nil, err
+		}
+		config.CustomerNumber = nr
+	}
+
+	apiKeyOverride := os.Getenv("APIKEY")
+	if apiKeyOverride != "" {
+		config.APIKey = apiKeyOverride
+	}
+
+	apiPasswordOverride := os.Getenv("APIPASSWORD")
+	if apiPasswordOverride != "" {
+		config.APIPassword = apiPasswordOverride
 	}
 
 	return &config, nil

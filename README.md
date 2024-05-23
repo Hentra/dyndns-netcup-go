@@ -51,6 +51,28 @@ If you need additional features please open up an
 The environment variable `INTERVAL` defines the interval of DNS updates in
 seconds. 
 
+### Setting secrets via environment variables
+
+You can set the following environment variables to inject secrets into the configuration:
+
+- CUSTOMERNR
+- APIKEY
+- APIPASSWORD
+
+> If the environment variables are set, the coresponding value from the `config.yml` file will be overwritten.
+
+Example:
+
+    docker run -d \
+        -v $(pwd)/config.yml:/config.yml \
+        -e INTERVAL=300 \
+        -e CUSTOMERNR=111111 \
+        -e APIKEY=my-fancy-api-key \
+        -e APIPASSWORD=my-fancy-api-pw \
+        ghcr.io/hentra/dyndns-netcup-go
+
+This allows you to store the configuration in plain text(e.g. git) and inject the secrets safely from a secret management solution.
+
 ### Manual
  1. Download the lastest [binary](https://github.com/Hentra/dyndns-netcup-go/releases) for your OS
  2. `cd` to the file you downloaded and unzip
