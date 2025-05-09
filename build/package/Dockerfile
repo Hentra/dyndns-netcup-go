@@ -1,5 +1,5 @@
 # build stage
-FROM golang:1.18.1-alpine3.15 as build-stage
+FROM golang:1.24.2-alpine3.21 AS build-stage
 WORKDIR /app
 COPY . .
 RUN CGO_ENABLED=0 go build -o /dyndns-docker ./cmd/dyndns-netcup-docker/main.go 
