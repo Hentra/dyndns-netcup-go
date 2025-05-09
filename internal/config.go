@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"strconv"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -29,7 +30,8 @@ type Domain struct {
 
 // LoadConfig returns a config loaded from a specified location. It will
 // return an error if there is no file in the specified location or it is
-// unable to read it.
+// unable to read it. CUSTOMERNR, APIKEY and APIPASSWORD can also be read
+// from environment variables or secret files, if present.
 func LoadConfig(filename string) (*Config, error) {
 	yamlFile, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -42,14 +44,11 @@ func LoadConfig(filename string) (*Config, error) {
 		return nil, err
 	}
 
-	// Fetch secrets from environment variables
-	// This way they may be stored in a secret manager and injected
-	//
-	// The environment variables are:
-	// - CUSTOMERNR
-	// - APIKEY
-	// - APIPASSWORD
-	customerNumberOverride := os.Getenv("CUSTOMERNR")
+	// Fetch secrets from environment variables / secret files
+	customerNumberOverride, err := get_secret("CUSTOMERNR")
+	if err != nil {
+		return nil, err
+	}
 	if customerNumberOverride != "" {
 		nr, err := strconv.Atoi(customerNumberOverride)
 		if err != nil {
@@ -58,17 +57,41 @@ func LoadConfig(filename string) (*Config, error) {
 		config.CustomerNumber = nr
 	}
 
-	apiKeyOverride := os.Getenv("APIKEY")
+	apiKeyOverride, err := get_secret("APIKEY")
+	if err != nil {
+		return nil, err
+	}
 	if apiKeyOverride != "" {
 		config.APIKey = apiKeyOverride
 	}
 
-	apiPasswordOverride := os.Getenv("APIPASSWORD")
+	apiPasswordOverride, err := get_secret("APIPASSWORD")
+	if err != nil {
+		return nil, err
+	}
 	if apiPasswordOverride != "" {
 		config.APIPassword = apiPasswordOverride
 	}
 
 	return &config, nil
+}
+
+// get_secret returns the secret for a given key, either by reading its
+// environment variable or by reading it from a secret file
+func get_secret(key string) (secret string, error error) {
+	// try to read file from environment variable key with _FILE ending
+	secret_file_location := os.Getenv(key + "_FILE")
+	// if environment variable was set and we got a file location, read it
+	if secret_file_location != "" {
+		secret_file, err := os.ReadFile(secret_file_location)
+		if err != nil {
+			return "", err
+		}
+		secret = strings.TrimSpace(string(secret_file))
+		return secret, nil
+	}
+	// fallback to simply reading the environment variable itself
+	return os.Getenv(key), nil
 }
 
 // UnmarshalYAML is implemented to override the default value of
