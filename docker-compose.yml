@@ -1,4 +1,3 @@
-version: "3"
 
 services:
   dyn-dns:
@@ -6,6 +5,26 @@ services:
     container_name: Netcup-Dyn-DNS
     environment:
       - INTERVAL=300
+      - CUSTOMERNR_FILE=/run/secrets/customernr
+      - APIKEY_FILE=/run/secrets/apikey
+      - APIPASSWORD_FILE=/run/secrets/apipassword
+    secrets:
+      - customernr
+      - apikey
+      - apipassword
     volumes:
       - ./config.yml:/config.yml
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
     restart: unless-stopped
+
+secrets:
+  customernr:
+    file: ./secrets/customernr
+  apikey:
+    file: ./secrets/apikey
+  apipassword:
+    file: ./secrets/apipassword
+
