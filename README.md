@@ -15,7 +15,9 @@ dynamic DNS needs.
 
 * [Features](#features)
 * [Installation](#installation)
-	* [Docker](#docker)
+	* [Docker compose](#docker-compose-example-using-secret-files)
+	* [Docker CLI](#docker-cli)
+  * [Environment Variables](#environment-variables)
 	* [Manual](#manual)
 	* [From source](#from-source)
 * [Usage](#usage)
@@ -35,21 +37,86 @@ dynamic DNS needs.
 * Creation of a DNS record if it doesn't already exist
 * Multi host support (nice when you need to update both `@` and `*`) 
 * IPv6 support
+* secure Docker support 
+* secret files
 
 If you need additional features please open up an
 [Issue](https://github.com/Hentra/dyndns-netcup-go/issues).
 
 ## Installation 
 
-### Docker
+### Docker compose example using secret files
+
+You need to create config.yml file in the same directory as the docker-compose.yml file, take a look at [config/example.yml](config/example.yml) for an example.
+For a Docker setup do not save your secrets (api key, etc.) directly in the config.yml, but rather as environment variable or secret file, as shown below!
+For secrets management create three files under `secrets/` with the names `customernr`, `apikey` and `apipassword`, like in the [secrets/](secrets/) directory.
+To further protect the secrets from unauthorized access, make sure it is owned by the user that runs dyndns-netcup-go, by default being the UID 62534 and make it read-only:
+```shell
+sudo chown 62534:62534 secrets/*
+sudo chmod 440 secrets/*
+```
+
+After that setup you can use the following docker-compose.yml as an example, also available in [docker-compose.yml](docker-compose.yml):
+```compose.yml
+services:
+  dyn-dns:
+    image: ghcr.io/hentra/dyndns-netcup-go
+    container_name: Netcup-Dyn-DNS
+    environment:
+      - INTERVAL=300
+      - CUSTOMERNR_FILE=/run/secrets/customernr
+      - APIKEY_FILE=/run/secrets/apikey
+      - APIPASSWORD_FILE=/run/secrets/apipassword
+    secrets:
+      - customernr
+      - apikey
+      - apipassword
+    volumes:
+      - ./config.yml:/config.yml
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    networks:
+      - ipv6-enabled-network
+
+secrets:
+  customernr:
+    file: ./secrets/customernr
+  apikey:
+    file: ./secrets/apikey
+  apipassword:
+    file: ./secrets/apipassword
+
+networks:
+  ipv6-enabled-network:
+    enable_ipv6: true
+```
+
+### Docker CLI
 
     docker run -d \
         -v $(pwd)/config.yml:/config.yml \
         -e INTERVAL=300 \
+        -e CUSTOMERNR=111111 \
+        -e APIKEY=my-fancy-api-key \
+        -e APIPASSWORD=my-fancy-api-pw \
         ghcr.io/hentra/dyndns-netcup-go
 
-The environment variable `INTERVAL` defines the interval of DNS updates in
-seconds. 
+This allows you to store the configuration in plain text(e.g. git) and inject the secrets safely from a secret management solution.
+
+### Environment Variables
+
+| Environment Variable | Description                                                             |
+|----------------------|-------------------------------------------------------------------------|
+| INTERVAL             | defines the interval of DNS updates in seconds                          |
+| CUSTOMERNR_FILE      | location of the secrets file containing your customer number from netcup|
+| APIKEY_FILE          | location of the secrets file containing your API key from netcup        |
+| APIPASSWORD_FILE     | location of the secrets file containing your API password from netcu    |
+| CUSTOMERNR           | alternative to secrets file: customer number from netcup                |
+| APIKEY               | alternative to secrets file: containing your API key from netcup        |
+| APIPASSWORD          | alternative to secrets file: containing your API password from netcu    |
 
 ### Manual
  1. Download the lastest [binary](https://github.com/Hentra/dyndns-netcup-go/releases) for your OS
@@ -103,7 +170,7 @@ it would be also possible to store the ip addresses between two runs of the
 application and only fetch DNS records from netcup when they differ. 
 
 To enable the cache configure the two variables `IP-CACHE` and
-`IP-CACHE-LOCATION` as according to the comments in `example.yml`.
+`IP-CACHE-TIMEOUT` as according to the comments in `example.yml`.
 
 ## Contributing 
 For any feature requests and or bugs open up an

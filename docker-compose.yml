@@ -1,0 +1,35 @@
+services:
+  dyn-dns:
+    image: ghcr.io/hentra/dyndns-netcup-go
+    container_name: Netcup-Dyn-DNS
+    environment:
+      - INTERVAL=300
+      - CUSTOMERNR_FILE=/run/secrets/customernr
+      - APIKEY_FILE=/run/secrets/apikey
+      - APIPASSWORD_FILE=/run/secrets/apipassword
+    secrets:
+      - customernr
+      - apikey
+      - apipassword
+    volumes:
+      - ./config.yml:/config.yml
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    networks:
+      - ipv6-enabled-network
+
+secrets:
+  customernr:
+    file: ./secrets/customernr
+  apikey:
+    file: ./secrets/apikey
+  apipassword:
+    file: ./secrets/apipassword
+
+
+networks:
+  ipv6-enabled-network:
+    enable_ipv6: true
