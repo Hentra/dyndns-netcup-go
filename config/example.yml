@@ -14,6 +14,11 @@ IP-CACHE: '/home/user/.cache/dyndns.cache'
 # To disable the cache set the value to 0.
 IP-CACHE-TIMEOUT: 3600
 
+# Services to query for the current IPv4 or IPv6 address.
+# The differentiation between IPv4 and IPv6 has to be made by the service.
+IPV4-SERVICE: "https://api.ipify.org?format=text"
+IPV6-SERVICE: "https://api6.ipify.org?format=text"
+
 DOMAINS: 
     - NAME: 'example.de' # Your domain name without any subdomains.
       IPV6: true # Whether the 'AAAA' entries of this host should be
